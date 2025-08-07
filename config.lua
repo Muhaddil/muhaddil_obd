@@ -10,3 +10,23 @@ Config.FrameWork = "auto" -- Set the framework to use, options are "auto", "esx"
 Config.AutoVersionChecker = true -- Automatically check for updates
 
 Config.OBDItem = 'obd' -- Item used to open the OBD tablet
+Config.UpdateInterval = 60 -- Interval in seconds to update vehicle data
+Config.UseAnimations = true -- Use animations when opening the tablet
+Config.tabletAnimDict = "amb@world_human_tourist_map@male@base" -- Animation dictionary for the tablet
+Config.tabletAnimName = "base" -- Animation name for the tablet
+Config.tabletModel = "prop_cs_tablet" -- Model of the tablet prop
+Config.ElectricVehicles = {
+  "airtug",     "buffalo5",   "caddy",
+  "caddy2",     "caddy3",     "coureur",
+  "cyclone",    "cyclone2",   "imorgon",
+  "inductor",   "iwagen",     "khamelion",
+  "metrotrain", "minitank",   "neon",
+  "omnisegt",   "powersurge", "raiden",
+  "rcbandito",  "surge",      "tezeract",
+  "virtue",     "vivanite",   "voltic",
+  "voltic2",    "dilettante", "dilettante2",
+  "nkomnisegt", "serv_electricscooter",  "mantis",
+  "elytron",    "raidenz",    "kawaii",
+}
+
+Config.EnableBackgrondParticles = true -- Enable background particles animation in the OBD UI (not it minimalistic mode)

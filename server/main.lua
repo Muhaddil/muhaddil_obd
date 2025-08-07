@@ -38,29 +38,33 @@ end
 --     return translated
 -- end
 
-local function TranslateDates(servicing) -- Translate this to your needs
-    return {
-        motor = {
-            ["Aceite del motor"] = string.format("%.2f%%", servicing.engineOil or 0),
-            ["Bujías"] = string.format("%.2f%%", servicing.sparkPlugs or 0),
-            ["Motor"] = string.format("%.2f%%", servicing.evMotor or 0),
-            ["Refrigerante"] = string.format("%.2f%%", servicing.evCoolant or 0)
-        },
+local function TranslateDates(servicing, isElectric)
+    local result = {
+        motor = {},
         rendimiento = {
-            ["Filtro de aire"] = string.format("%.2f%%", servicing.airFilter or 0),
             ["Suspensión"] = string.format("%.2f%%", servicing.suspension or 0),
-            ["Embrague"] = string.format("%.2f%%", servicing.clutch or 0),
             ["Neumáticos"] = string.format("%.2f%%", servicing.tyres or 0),
             ["Pastillas de freno"] = string.format("%.2f%%", servicing.brakePads or 0),
         },
-        diagnostico = {
-            ["Batería"] = string.format("%.2f%%", servicing.evBattery or 0)
-        }
+        diagnostico = {}
     }
+
+    if isElectric then
+        result.motor["Motor"] = string.format("%.2f%%", servicing.evMotor or 0)
+        result.motor["Refrigerante"] = string.format("%.2f%%", servicing.evCoolant or 0)
+        result.diagnostico["Batería"] = string.format("%.2f%%", servicing.evBattery or 0)
+    else
+        result.motor["Aceite del motor"] = string.format("%.2f%%", servicing.engineOil or 0)
+        result.motor["Bujías"] = string.format("%.2f%%", servicing.sparkPlugs or 0)
+        result.rendimiento["Filtro de aire"] = string.format("%.2f%%", servicing.airFilter or 0)
+        result.rendimiento["Embrague"] = string.format("%.2f%%", servicing.clutch or 0)
+    end
+
+    return result
 end
 
 RegisterServerEvent("muhaddil_obd:getVehicleData")
-AddEventHandler("muhaddil_obd:getVehicleData", function(plate, vehicle)
+AddEventHandler("muhaddil_obd:getVehicleData", function(plate, vehicle, isElectric)
     local src = source
 
     MySQL.Async.fetchScalar("SELECT data FROM mechanic_vehicledata WHERE plate = @plate", {
@@ -68,21 +72,13 @@ AddEventHandler("muhaddil_obd:getVehicleData", function(plate, vehicle)
     }, function(data)
         if data then
             local parsedData = json.decode(data)
-            local servicing = parsedData.servicingData
+            local servicing = parsedData.servicingData or {}
 
-            if not servicing then
-                servicing = {
-                    lastService = "No data",
-                    nextService = "No data"
-                }
-            end
-
-            local trServicing = TranslateDates(servicing)
+            local trServicing = TranslateDates(servicing, isElectric)
             DebugPrint("Translated servicing data:", json.encode(trServicing))
             TriggerClientEvent("muhaddil_obd:openUI", src, trServicing, vehicle)
         else
-            TriggerClientEvent("muhaddil_obd:SendNotification", src, "OBD", "No se encontraron datos del vehículo.", 5000,
-            "error")
+            TriggerClientEvent("muhaddil_obd:SendNotification", src, "OBD", "No se encontraron datos del vehículo.", 5000, "error")
         end
     end)
 end)

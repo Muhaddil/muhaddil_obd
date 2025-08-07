@@ -44,12 +44,10 @@
       left: 0;
       width: 100%;
       height: 100%;
-      /* background: rgba(0, 0, 0, 0.9); */
       display: none;
       justify-content: center;
       align-items: center;
       z-index: 2000;
-      /* backdrop-filter: blur(10px); */
       animation: introModalEntry 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
@@ -98,6 +96,20 @@
     }
 
     .intro-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(46, 204, 113, 0.2), transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(52, 152, 219, 0.2), transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(155, 89, 182, 0.1), transparent 50%);
+      pointer-events: none;
+    }
+
+    .intro-content.show-particles::before {
       content: '';
       position: absolute;
       top: 0;
@@ -355,23 +367,24 @@
       }
     }
 
-    @keyframes tabletDramaticExit {
+    #tablet {
+      will-change: transform, opacity;
+    }
+
+    @keyframes tabletSmoothExit {
       0% {
         opacity: 1;
         transform: scale(1) rotateY(0deg) translateY(0);
-        filter: blur(0px);
       }
 
       50% {
         opacity: 0.5;
-        transform: scale(1.1) rotateY(-45deg) translateY(-30px);
-        filter: blur(3px);
+        transform: scale(1.05) rotateY(-20deg) translateY(-20px);
       }
 
       100% {
         opacity: 0;
-        transform: scale(0.2) rotateY(-180deg) translateY(150px);
-        filter: blur(15px);
+        transform: scale(0.8) rotateY(-90deg) translateY(80px);
       }
     }
 
@@ -386,7 +399,6 @@
       position: relative;
     }
 
-    /* EFECTO DE PARTÍCULAS FLOTANTES EN EL FONDO */
     .screen::before {
       content: '';
       position: absolute;
@@ -402,9 +414,12 @@
         radial-gradient(2px 2px at 160px 30px, rgba(155, 89, 182, 0.4), transparent);
       background-repeat: repeat;
       background-size: 200px 150px;
-      animation: particlesDance 15s linear infinite;
       pointer-events: none;
       opacity: 0.6;
+    }
+
+    .screen.show-particles::before {
+      animation: particlesDance 15s linear infinite;
     }
 
     @keyframes particlesDance {
@@ -447,22 +462,6 @@
       gap: 15px;
     }
 
-    @keyframes iconPulseGlow {
-
-      0%,
-      100% {
-        transform: scale(1);
-        text-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
-        color: #e0e0ff;
-      }
-
-      50% {
-        transform: scale(1.2);
-        text-shadow: 0 0 20px rgba(46, 204, 113, 1);
-        color: #2ecc71;
-      }
-    }
-
     .content {
       flex: 1;
       display: flex;
@@ -492,22 +491,18 @@
 
       0%,
       100% {
-        /* transform: scale(1) rotateX(0deg); */
         text-shadow: 0 0 10px rgba(100, 150, 255, 0.5);
       }
 
       25% {
-        /* transform: scale(1.05) rotateX(5deg); */
         text-shadow: 0 0 20px rgba(46, 204, 113, 0.8);
       }
 
       50% {
-        /* transform: scale(1.1) rotateX(0deg); */
         text-shadow: 0 0 30px rgba(52, 152, 219, 1);
       }
 
       75% {
-        /* transform: scale(1.05) rotateX(-5deg); */
         text-shadow: 0 0 20px rgba(155, 89, 182, 0.8);
       }
     }
@@ -1065,7 +1060,44 @@
       color: #e0e0ff;
       text-align: center;
       margin: auto 0;
-      transition: all 0.4s ease;
+      transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    /* NUEVA ANIMACIÓN PARA ACTUALIZACIÓN DE VALORES */
+    .data-card .value.updating {
+      animation: valueUpdatePulse 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes valueUpdatePulse {
+      0% {
+        transform: scale(1);
+        color: #e0e0ff;
+        text-shadow: none;
+      }
+
+      25% {
+        transform: scale(1.2) rotateZ(5deg);
+        color: #2ecc71;
+        text-shadow: 0 0 20px rgba(46, 204, 113, 0.8);
+      }
+
+      50% {
+        transform: scale(1.3) rotateZ(-3deg);
+        color: #3498db;
+        text-shadow: 0 0 30px rgba(52, 152, 219, 1);
+      }
+
+      75% {
+        transform: scale(1.1) rotateZ(2deg);
+        color: #9b59b6;
+        text-shadow: 0 0 25px rgba(155, 89, 182, 0.8);
+      }
+
+      100% {
+        transform: scale(1) rotateZ(0deg);
+        color: #e0e0ff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
     }
 
     .data-card:hover .value {
@@ -1096,6 +1128,33 @@
       position: relative;
       overflow: hidden;
       transition: width 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    /* NUEVA ANIMACIÓN PARA ACTUALIZACIÓN DE PROGRESO */
+    .progress.updating {
+      animation: progressUpdateGlow 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes progressUpdateGlow {
+      0% {
+        box-shadow: none;
+      }
+
+      25% {
+        box-shadow: 0 0 15px rgba(46, 204, 113, 0.8);
+      }
+
+      50% {
+        box-shadow: 0 0 25px rgba(52, 152, 219, 1);
+      }
+
+      75% {
+        box-shadow: 0 0 20px rgba(155, 89, 182, 0.8);
+      }
+
+      100% {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
     }
 
     .progress::before {
@@ -1206,7 +1265,6 @@
         <h1><i class="fas fa-car"></i> Tablet OBD-II</h1>
         <div class="subtitle">Sistema de Diagnóstico Avanzado</div>
       </div>
-
       <div class="intro-features">
         <div class="feature-item">
           <i class="fas fa-tachometer-alt"></i>
@@ -1215,7 +1273,6 @@
             vehículo al instante.
           </div>
         </div>
-
         <div class="feature-item">
           <i class="fas fa-chart-line"></i>
           <div class="feature-text">
@@ -1223,7 +1280,6 @@
             aceite, bujías y sistema de frenos.
           </div>
         </div>
-
         <div class="feature-item">
           <i class="fas fa-wrench"></i>
           <div class="feature-text">
@@ -1231,7 +1287,6 @@
             reparaciones costosas.
           </div>
         </div>
-
         <div class="feature-item">
           <i class="fas fa-mobile-alt"></i>
           <div class="feature-text">
@@ -1240,7 +1295,6 @@
           </div>
         </div>
       </div>
-
       <div class="intro-footer">
         <p>¡Bienvenido al futuro del diagnóstico automotriz! Esta tablet te permitirá mantener tu vehículo en óptimas
           condiciones.</p>
@@ -1257,6 +1311,7 @@
         <div class="time">--:--</div>
         <div class="status-icons"><i class="fas fa-wifi"></i><i class="fas fa-battery-three-quarters"></i></div>
       </div>
+
       <div class="content">
         <div id="connection">
           <h2><i class="fas fa-car"></i> CONEXIÓN OBD-II</h2>
@@ -1268,6 +1323,7 @@
             <i class="fas fa-plug"></i> CONECTAR
           </button>
         </div>
+
         <div id="vehicleData" style="display: none; flex-direction: column;">
           <div class="data-header">
             <h2><i class="fas fa-car"></i> DATOS DEL VEHÍCULO</h2>
@@ -1275,11 +1331,13 @@
               <i class="fas fa-times"></i> CERRAR
             </button>
           </div>
+
           <div class="tabs">
             <div class="tab active" data-tab="engine">Motor</div>
             <div class="tab" data-tab="performance">Rendimiento</div>
             <div class="tab" data-tab="diagnostics">Diagnóstico</div>
           </div>
+
           <div id="engine-content" class="tab-content active">
             <div class="data-grid"></div>
           </div>
@@ -1293,17 +1351,18 @@
       </div>
     </div>
   </div>
+
   <div class="notification" id="notification"></div>
 
   <script>
     let vehicleData = null;
     let currentTab = "engine";
+    let isInitialized = false;
 
     function checkFirstTime() {
       try {
         if (typeof GetParentResourceName === 'function') {
-          const hasSeenIntro = localStorage.getItem('obd_tablet_intro_seen'); // Comment this line to always show the intro for testing
-          // const hasSeenIntro = false // Uncomment this line to always show the intro for testing
+          const hasSeenIntro = localStorage.getItem('obd_tablet_intro_seen');
           if (!hasSeenIntro) {
             showIntroduction();
             localStorage.setItem('obd_tablet_intro_seen', 'true');
@@ -1328,7 +1387,6 @@
     function closeIntro() {
       const introModal = document.getElementById('introModal');
       introModal.style.animation = 'tabletDramaticExit 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
-
       setTimeout(() => {
         introModal.style.display = 'none';
         introModal.style.animation = '';
@@ -1379,6 +1437,7 @@
     function renderTab(tabName, data) {
       const container = document.querySelector(`#${tabName}-content .data-grid`);
       container.innerHTML = '';
+
       const icons = {
         "Aceite del motor": "fas fa-oil-can",
         "Bujías": "fas fa-bolt",
@@ -1398,15 +1457,47 @@
       for (const [name, val] of Object.entries(data)) {
         const card = document.createElement('div');
         card.className = 'data-card';
+        card.setAttribute('data-name', name);
         const icon = icons[name] || 'fas fa-info-circle';
+
         card.innerHTML = `
-                    <h3><i class="${icon}"></i> ${name}</h3>
-                    <div class="value">${val}</div>
-                    <div class="progress-bar">
-                        <div class="progress" style="width:${parseFloat(val)}%"></div>
-                    </div>
-                `;
+          <h3><i class="${icon}"></i> ${name}</h3>
+          <div class="value">${val}</div>
+          <div class="progress-bar">
+            <div class="progress" style="width:${parseFloat(val)}%"></div>
+          </div>
+        `;
         container.appendChild(card);
+      }
+    }
+
+    function updateTabData(tabName, data) {
+      const container = document.querySelector(`#${tabName}-content .data-grid`);
+
+      for (const [name, newVal] of Object.entries(data)) {
+        const card = container.querySelector(`[data-name="${name}"]`);
+        if (card) {
+          const valueElement = card.querySelector('.value');
+          const progressElement = card.querySelector('.progress');
+
+          const currentValue = parseInt(valueElement.textContent);
+          const newValue = parseInt(newVal);
+
+          if (currentValue !== newValue) {
+            valueElement.classList.add('updating');
+            progressElement.classList.add('updating');
+
+            setTimeout(() => {
+              valueElement.textContent = newVal;
+              progressElement.style.width = `${parseFloat(newVal)}%`;
+            }, 200);
+
+            setTimeout(() => {
+              valueElement.classList.remove('updating');
+              progressElement.classList.remove('updating');
+            }, 800);
+          }
+        }
       }
     }
 
@@ -1418,9 +1509,14 @@
       setTimeout(() => {
         if (vehicleData) {
           const dataToRender = vehicleData || sampleVehicleData;
-          renderTab('engine', dataToRender.motor || sampleVehicleData.motor);
-          renderTab('performance', dataToRender.rendimiento || sampleVehicleData.rendimiento);
-          renderTab('diagnostics', dataToRender.diagnostico || sampleVehicleData.diagnostico);
+
+          if (!isInitialized) {
+            renderTab('engine', dataToRender.motor || sampleVehicleData.motor);
+            renderTab('performance', dataToRender.rendimiento || sampleVehicleData.rendimiento);
+            renderTab('diagnostics', dataToRender.diagnostico || sampleVehicleData.diagnostico);
+            isInitialized = true;
+          }
+
           document.getElementById('connection').style.display = 'none';
           document.getElementById('vehicleData').style.display = 'flex';
           showNotification("¡Conexión exitosa!");
@@ -1439,11 +1535,14 @@
 
     function closeUI() {
       const tablet = document.getElementById('tablet');
-      tablet.style.animation = 'tabletDramaticExit 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
+      tablet.style.willChange = 'transform, opacity';
+      tablet.style.animation = 'tabletSmoothExit 0.6s ease-in forwards';
       setTimeout(() => {
         tablet.style.display = 'none';
         tablet.style.animation = '';
-      }, 1000);
+        tablet.style.willChange = '';
+        isInitialized = false;
+      }, 600);
 
       if (typeof GetParentResourceName === 'function') {
         fetch(`https://${GetParentResourceName()}/closeUI`, {
@@ -1455,14 +1554,39 @@
 
     window.addEventListener('message', e => {
       const data = e.data;
+      const intro = document.querySelector('.intro-content');
+      const screen = document.querySelector('.screen');
+
       if (data.action === 'showUI') {
         vehicleData = data.vehicle || sampleVehicleData;
+        const showParticles = data.showParticles || false;
+
+        if (showParticles) {
+          intro.classList.add('show-particles');
+          screen.classList.add('show-particles');
+        } else {
+          intro.classList.remove('show-particles');
+          screen.classList.remove('show-particles');
+        }
+
         document.getElementById('tablet').style.display = 'block';
         document.getElementById('connection').style.display = 'flex';
         document.getElementById('vehicleData').style.display = 'none';
-
         checkFirstTime();
       }
+
+      if (data.action === 'updateData') {
+        vehicleData = data.vehicle || sampleVehicleData;
+
+        if (isInitialized) {
+          updateTabData('engine', vehicleData.motor || sampleVehicleData.motor);
+          updateTabData('performance', vehicleData.rendimiento || sampleVehicleData.rendimiento);
+          updateTabData('diagnostics', vehicleData.diagnostico || sampleVehicleData.diagnostico);
+
+          // showNotification("Datos actualizados");
+        }
+      }
+
       if (data.action === 'hideUI') {
         closeUI();
         closeIntro();
@@ -1473,6 +1597,7 @@
       tab.addEventListener('click', function () {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
         this.classList.add('active');
         currentTab = this.dataset.tab;
         document.getElementById(`${currentTab}-content`).classList.add('active');
@@ -1489,13 +1614,16 @@
       }
     });
 
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        renderTab('engine', sampleVehicleData.motor);
-        renderTab('performance', sampleVehicleData.rendimiento);
-        renderTab('diagnostics', sampleVehicleData.diagnostico);
-      }, 1000);
-    });
+    // window.addEventListener('load', () => {
+    //   setTimeout(() => {
+    //     if (!isInitialized) {
+    //       renderTab('engine', sampleVehicleData.motor);
+    //       renderTab('performance', sampleVehicleData.rendimiento);
+    //       renderTab('diagnostics', sampleVehicleData.diagnostico);
+    //       isInitialized = true;
+    //     }
+    //   }, 1000);
+    // });
   </script>
 </body>
 
