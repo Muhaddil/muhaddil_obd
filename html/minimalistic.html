@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tablet OBD - FiveM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .tablet-container {
+            display: none;
+            position: relative;
+            width: 800px;
+            max-width: 95%;
+            height: 600px;
+            background: #111;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            overflow: hidden;
+            /* NUEVA ANIMACIÓN DE ENTRADA */
+            animation: tabletSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* NUEVA ANIMACIÓN DE ENTRADA DE LA TABLETA */
+        @keyframes tabletSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* NUEVA ANIMACIÓN DE SALIDA DE LA TABLETA */
+        @keyframes tabletSlideOut {
+            from {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px);
+            }
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #0a0e21, #1a1f3a);
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #e0e0ff;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            flex-shrink: 0;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #connection {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            height: 100%;
+        }
+
+        #connection h2 {
+            color: #e0e0ff;
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(100, 150, 255, 0.5);
+        }
+
+        .connection-info {
+            color: #a0a0c0;
+            max-width: 500px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(46, 204, 113, 0.3);
+            border-top: 5px solid #2ecc71;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn {
+            padding: 12px 35px;
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: .3s;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* BOTÓN DE CERRAR COMPLETAMENTE REDISEÑADO */
+        .btn-close {
+            background: linear-gradient(135deg, #ff4757, #ff3742, #ff6b7a);
+            background-size: 200% 200%;
+            position: relative;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+            border: 2px solid transparent;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .btn-close::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #ff6b7a, #ff4757);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn-close::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border-radius: 50%;
+        }
+
+        .btn-close:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.6);
+            background-position: 100% 0;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-close:hover::before {
+            opacity: 1;
+        }
+
+        .btn-close:hover::after {
+            width: 80px;
+            height: 80px;
+        }
+
+        .btn-close:active {
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.5);
+        }
+
+        .btn-close i {
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-close:hover i {
+            transform: rotate(90deg);
+        }
+
+        #vehicleData {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            /* NUEVA ANIMACIÓN AL MOSTRAR DATOS */
+            animation: slideInFromRight 0.5s ease-out;
+        }
+
+        /* NUEVA ANIMACIÓN PARA LOS DATOS DEL VEHÍCULO */
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .data-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .data-header h2 {
+            color: #e0e0ff;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            padding: 0 15px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all .3s;
+            color: #a0a0c0;
+            font-size: 14px;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* NUEVA ANIMACIÓN PARA LAS PESTAÑAS */
+        .tab::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #2ecc71, #3498db);
+            transition: width 0.3s ease;
+        }
+
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        .tab.active::before {
+            width: 100%;
+        }
+
+        .tab-content {
+            display: none;
+            flex: 1;
+            padding: 0 15px 15px;
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: block;
+            /* NUEVA ANIMACIÓN AL CAMBIAR PESTAÑAS */
+            animation: tabFadeIn 0.3s ease-out;
+        }
+
+        /* NUEVA ANIMACIÓN PARA EL CONTENIDO DE LAS PESTAÑAS */
+        @keyframes tabFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            padding-bottom: 10px;
+        }
+
+        .data-card {
+            background: rgba(30, 35, 60, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all .4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            flex-direction: column;
+            min-height: 180px;
+            position: relative;
+            overflow: hidden;
+            /* NUEVA ANIMACIÓN PARA LAS TARJETAS */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: cardSlideIn 0.5s ease-out forwards;
+        }
+
+        /* ANIMACIONES ESCALONADAS PARA LAS TARJETAS */
+        .data-card:nth-child(1) { animation-delay: 0.1s; }
+        .data-card:nth-child(2) { animation-delay: 0.2s; }
+        .data-card:nth-child(3) { animation-delay: 0.3s; }
+        .data-card:nth-child(4) { animation-delay: 0.4s; }
+        .data-card:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes cardSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* NUEVO EFECTO DE BRILLO EN LAS TARJETAS */
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(46, 204, 113, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .data-card:hover {
+            transform: translateY(-5px);
+            background: rgba(40, 45, 70, 0.8);
+            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.2);
+        }
+
+        .data-card:hover::before {
+            left: 100%;
+        }
+
+        .data-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2ecc71;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .data-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #e0e0ff;
+            text-align: center;
+            margin: auto 0;
+        }
+
+        .data-card .unit {
+            text-align: center;
+            color: #a0a0c0;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #2ecc71, #3498db);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            /* NUEVA ANIMACIÓN PARA LAS BARRAS DE PROGRESO */
+            transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* NUEVO EFECTO DE BRILLO EN LAS BARRAS DE PROGRESO */
+        .progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progressShine 2s infinite;
+        }
+
+        @keyframes progressShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(30, 40, 60, 0.9);
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-left: 4px solid #2ecc71;
+            transform: translateX(150%);
+            transition: transform .5s;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            /* NUEVA ANIMACIÓN PARA LAS NOTIFICACIONES */
+            animation: notificationBounce 0.5s ease-out;
+        }
+
+        /* NUEVA ANIMACIÓN PARA LAS NOTIFICACIONES */
+        @keyframes notificationBounce {
+            0% { transform: translateX(0) scale(0.9); }
+            50% { transform: translateX(0) scale(1.05); }
+            100% { transform: translateX(0) scale(1); }
+        }
+
+        /* Scrollbar personalizada */
+        .tab-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .tab-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb {
+            background: rgba(46, 204, 113, 0.5);
+            border-radius: 4px;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(46, 204, 113, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="tablet-container" id="tablet">
+        <div class="screen">
+            <div class="status-bar">
+                <div class="time">--:--</div>
+                <div class="status-icons"><i class="fas fa-wifi"></i><i class="fas fa-battery-three-quarters"></i></div>
+            </div>
+            <div class="content">
+                <div id="connection">
+                    <h2><i class="fas fa-car"></i> CONEXIÓN OBD-II</h2>
+                    <p class="connection-info">
+                        Conecta tu tablet al sistema OBD-II de tu vehículo para acceder a datos en tiempo real.
+                    </p>
+                    <div class="spinner" id="spinner"></div>
+                    <button class="btn" id="connectBtn" onclick="connectOBD()">
+                        <i class="fas fa-plug"></i> CONECTAR
+                    </button>
+                </div>
+                <div id="vehicleData" style="display: none; flex-direction: column;">
+                    <div class="data-header">
+                        <h2><i class="fas fa-car"></i> DATOS DEL VEHÍCULO</h2>
+                        <button class="btn btn-close" onclick="closeUI()">
+                            <i class="fas fa-times"></i> CERRAR
+                        </button>
+                    </div>
+                    <div class="tabs">
+                        <div class="tab active" data-tab="engine">Motor</div>
+                        <div class="tab" data-tab="performance">Rendimiento</div>
+                        <div class="tab" data-tab="diagnostics">Diagnóstico</div>
+                    </div>
+                    <div id="engine-content" class="tab-content active">
+                        <div class="data-grid"></div>
+                    </div>
+                    <div id="performance-content" class="tab-content">
+                        <div class="data-grid"></div>
+                    </div>
+                    <div id="diagnostics-content" class="tab-content">
+                        <div class="data-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="notification" id="notification"></div>
+
+    <script>
+        let vehicleData = null;
+        let currentTab = "engine";
+
+        function updateTime() {
+            const now = new Date();
+            const h = now.getHours().toString().padStart(2, '0');
+            const m = now.getMinutes().toString().padStart(2, '0');
+            document.querySelector('.time').textContent = `${h}:${m}`;
+        }
+        setInterval(updateTime, 60000);
+        updateTime();
+
+        const sampleVehicleData = {
+            motor: {
+                "Aceite del motor": 85,
+                "Bujías": 92,
+                "Motor": 78,
+                "Refrigerante": 65,
+                "Filtro de aire": 88
+            },
+            rendimiento: {
+                "Suspensión": 75,
+                "Embrague": 90,
+                "Neumáticos": 82,
+                "Pastillas de freno": 70
+            },
+            diagnostico: {
+                "Batería": 60,
+                "Sistema eléctrico": 95,
+                "Escape": 80,
+                "Encendido": 87
+            }
+        };
+
+        function renderTab(tabName, data) {
+            const container = document.querySelector(`#${tabName}-content .data-grid`);
+            container.innerHTML = '';
+
+            const icons = {
+                "Aceite del motor": "fas fa-oil-can",
+                "Bujías": "fas fa-bolt",
+                "Motor": "fas fa-cogs",
+                "Refrigerante": "fas fa-water",
+                "Filtro de aire": "fas fa-wind",
+                "Suspensión": "fas fa-car-side",
+                "Embrague": "fas fa-sliders-h",
+                "Neumáticos": "fa-solid fa-truck-monster",
+                "Pastillas de freno": "fas fa-car-crash",
+                "Batería": "fas fa-car-battery",
+                "Sistema eléctrico": "fas fa-bolt",
+                "Escape": "fas fa-fire",
+                "Encendido": "fas fa-power-off"
+            };
+
+            for (const [name, val] of Object.entries(data)) {
+                const card = document.createElement('div');
+                card.className = 'data-card';
+                const icon = icons[name] || 'fas fa-info-circle';
+                card.innerHTML = `
+                    <h3><i class="${icon}"></i> ${name}</h3>
+                    <div class="value">${val}</div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width:${parseFloat(val)}%"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            }
+        }
+
+        function connectOBD() {
+            showNotification("Conectando al vehículo...");
+            document.getElementById('connectBtn').style.display = 'none';
+            document.getElementById('spinner').style.display = 'block';
+
+            setTimeout(() => {
+                if (vehicleData) {
+                    const dataToRender = vehicleData || sampleVehicleData;
+                    renderTab('engine', dataToRender.motor || sampleVehicleData.motor);
+                    renderTab('performance', dataToRender.rendimiento || sampleVehicleData.rendimiento);
+                    renderTab('diagnostics', dataToRender.diagnostico || sampleVehicleData.diagnostico);
+
+                    document.getElementById('connection').style.display = 'none';
+                    document.getElementById('vehicleData').style.display = 'flex';
+                    showNotification("¡Conexión exitosa!");
+                }
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('connectBtn').style.display = 'inline-block';
+            }, 1500);
+        }
+
+        function showNotification(msg) {
+            const n = document.getElementById('notification');
+            n.textContent = msg;
+            n.classList.add('show');
+            setTimeout(() => n.classList.remove('show'), 3000);
+        }
+
+        function closeUI() {
+            const tablet = document.getElementById('tablet');
+            tablet.style.animation = 'tabletSlideOut 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
+            
+            setTimeout(() => {
+                tablet.style.display = 'none';
+                tablet.style.animation = '';
+            }, 500);
+
+            fetch(`https://${GetParentResourceName()}/closeUI`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
+        window.addEventListener('message', e => {
+            const data = e.data;
+            if (data.action === 'showUI') {
+                vehicleData = data.vehicle || sampleVehicleData;
+                document.getElementById('tablet').style.display = 'block';
+                document.getElementById('connection').style.display = 'flex';
+                document.getElementById('vehicleData').style.display = 'none';
+            }
+            if (data.action === 'hideUI') {
+                closeUI();
+            }
+        });
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                this.classList.add('active');
+                currentTab = this.dataset.tab;
+                document.getElementById(`${currentTab}-content`).classList.add('active');
+            });
+        });
+
+        document.addEventListener('keydown', ev => {
+            if (ev.key === 'Escape' && document.getElementById('tablet').style.display === 'block') {
+                closeUI();
+            }
+        });
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                renderTab('engine', sampleVehicleData.motor);
+                renderTab('performance', sampleVehicleData.rendimiento);
+                renderTab('diagnostics', sampleVehicleData.diagnostico);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

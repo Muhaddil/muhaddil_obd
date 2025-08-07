@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tablet OBD - FiveM</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .tablet-container {
+      position: relative;
+      width: 800px;
+      max-width: 95%;
+      height: 600px;
+      background: #111;
+      border-radius: 30px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7),
+                  inset 0 0 10px rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      overflow: hidden;
+      display: none;
+    }
+
+    /* Botones físicos */
+    .tablet-button {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: #222;
+      border-radius: 50%;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #555;
+      font-size: 20px;
+      z-index: 10;
+    }
+
+    .power-btn {
+      top: 20px;
+      right: 20px;
+    }
+
+    .volume-up {
+      top: 80px;
+      right: 10px;
+    }
+
+    .volume-down {
+      top: 140px;
+      right: 10px;
+    }
+
+    .home-btn {
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 60px;
+    }
+
+    /* Pantalla */
+    .screen {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, #0a0e21, #1a1f3a);
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Barra de estado */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.3);
+      color: #e0e0ff;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 15px;
+    }
+
+    /* Contenido principal */
+    .content {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Pantalla de conexión */
+    #connection {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.5s ease;
+    }
+
+    #connection h2 {
+      color: #e0e0ff;
+      font-size: 28px;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px rgba(100, 150, 255, 0.5);
+    }
+
+    .connection-info {
+      color: #a0a0c0;
+      max-width: 500px;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    /* Spinner de conexión */
+    .spinner {
+      width: 70px;
+      height: 70px;
+      border: 5px solid rgba(46, 204, 113, 0.3);
+      border-top: 5px solid #2ecc71;
+      border-radius: 50%;
+      margin: 20px auto;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Botones */
+    .btn {
+      padding: 12px 35px;
+      background: linear-gradient(to right, #2ecc71, #27ae60);
+      border: none;
+      color: white;
+      font-size: 18px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-close {
+      background: linear-gradient(to right, #e74c3c, #c0392b);
+    }
+
+    /* Pantalla de datos */
+    #vehicleData {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      padding: 15px;
+    }
+
+    .data-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .data-header h2 {
+      color: #e0e0ff;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 0 15px;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #a0a0c0;
+    }
+
+    .tab.active {
+      background: rgba(46, 204, 113, 0.2);
+      color: #2ecc71;
+    }
+
+    .tab:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 0 15px 15px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .data-card {
+      background: rgba(30, 35, 60, 0.7);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .data-card:hover {
+      transform: translateY(-5px);
+      background: rgba(40, 45, 70, 0.8);
+    }
+
+    .data-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #2ecc71;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .data-card .value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #e0e0ff;
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .data-card .unit {
+      text-align: center;
+      color: #a0a0c0;
+      font-size: 14px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      margin-top: 15px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      background: linear-gradient(to right, #2ecc71, #3498db);
+      border-radius: 4px;
+    }
+
+    /* Notificaciones */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(30, 40, 60, 0.9);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      border-left: 4px solid #2ecc71;
+      transform: translateX(150%);
+      transition: transform 0.5s ease;
+      z-index: 1000;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Scrollbar personalizada */
+    .data-grid::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .data-grid::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+    }
+
+    .data-grid::-webkit-scrollbar-thumb {
+      background: rgba(46, 204, 113, 0.5);
+      border-radius: 4px;
+    }
+
+    .data-grid::-webkit-scrollbar-thumb:hover {
+      background: rgba(46, 204, 113, 0.7);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .tablet-container {
+        height: 500px;
+      }
+      
+      .data-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .btn {
+        padding: 10px 25px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Contenedor de la tablet -->
+  <div class="tablet-container" id="tablet">
+    <!-- Botones físicos -->
+    <!-- <div class="tablet-button power-btn">
+      <i class="fas fa-power-off"></i>
+    </div>
+    <div class="tablet-button volume-up">
+      <i class="fas fa-volume-up"></i>
+    </div>
+    <div class="tablet-button volume-down">
+      <i class="fas fa-volume-down"></i>
+    </div>
+    <div class="tablet-button home-btn">
+      <i class="fas fa-home"></i>
+    </div> -->
+
+    <!-- Pantalla -->
+    <div class="screen">
+      <!-- Barra de estado -->
+      <div class="status-bar">
+        <div class="time">14:25</div>
+        <div class="status-icons">
+          <i class="fas fa-wifi"></i>
+          <i class="fas fa-battery-three-quarters"></i>
+        </div>
+      </div>
+
+      <!-- Contenido -->
+      <div class="content">
+        <!-- Pantalla de conexión -->
+        <div id="connection">
+          <h2><i class="fas fa-car"></i> CONEXIÓN OBD-II</h2>
+          <p class="connection-info">
+            Conecta tu tablet al sistema OBD-II de tu vehículo para acceder a datos en tiempo real
+            sobre el rendimiento del motor, consumo de combustible, códigos de error y más.
+          </p>
+          <div class="spinner" id="spinner"></div>
+          <button class="btn" id="connectBtn" onclick="connectOBD()">
+            <i class="fas fa-plug"></i> CONECTAR
+          </button>
+        </div>
+
+        <!-- Pantalla de datos del vehículo -->
+        <div id="vehicleData">
+          <div class="data-header">
+            <h2><i class="fas fa-car"></i> DATOS DEL VEHÍCULO</h2>
+            <button class="btn btn-close" onclick="closeUI()">
+              <i class="fas fa-times"></i> CERRAR
+            </button>
+          </div>
+          
+          <div class="tabs">
+            <div class="tab active" data-tab="engine">Motor</div>
+            <div class="tab" data-tab="performance">Rendimiento</div>
+            <div class="tab" data-tab="diagnostics">Diagnóstico</div>
+            <div class="tab" data-tab="settings">Configuración</div>
+          </div>
+          
+          <div class="data-grid" id="data">
+            <!-- Los datos se generarán dinámicamente con JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notificación -->
+  <div class="notification" id="notification">
+    Conectando al vehículo...
+  </div>
+
+  <script>
+    const sampleVehicleData = {
+      "RPM": 2300,
+      "Velocidad": 65,
+      "Temperatura Motor": 92,
+      "Carga Motor": 45,
+      "Presión Combustible": 48,
+      "Nivel Combustible": 78,
+      "Voltaje Batería": 13.8,
+      "Temperatura Aire": 28,
+      "Presión Aceite": 210,
+      "Emisiones CO2": 4.2,
+      "Eficiencia Combustible": 12.5,
+      "Códigos Error": 0
+    };
+
+    let vehicleData = null;
+    let currentTab = "engine";
+
+    function updateTime() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      document.querySelector('.time').textContent = `${hours}:${minutes}`;
+    }
+    
+    setInterval(updateTime, 60000);
+    updateTime();
+
+    window.addEventListener('message', function (event) {
+      const data = event.data;
+      if (data.action === "showUI") {
+        vehicleData = data.vehicle;
+        document.getElementById("tablet").style.display = "block";
+        document.getElementById("connection").style.display = "flex";
+        document.getElementById("vehicleData").style.display = "none";
+      } else if (data.action === "hideUI") {
+        closeTablet();
+      }
+    });
+
+    function connectOBD() {
+      const connectBtn = document.getElementById("connectBtn");
+      const spinner = document.getElementById("spinner");
+      const notification = document.getElementById("notification");
+      
+      showNotification("Conectando al vehículo...");
+      
+      connectBtn.style.display = "none";
+      spinner.style.display = "block";
+      
+      setTimeout(() => {
+        if (vehicleData) {
+          renderVehicleData();
+          document.getElementById("connection").style.display = "none";
+          document.getElementById("vehicleData").style.display = "flex";
+          
+          showNotification("¡Conexión exitosa!");
+        }
+        
+        spinner.style.display = "none";
+        connectBtn.style.display = "inline-block";
+      }, 1500);
+    }
+
+    function showNotification(message) {
+      const notification = document.getElementById("notification");
+      notification.textContent = message;
+      notification.classList.add("show");
+      setTimeout(() => notification.classList.remove("show"), 3000);
+    }
+
+    function renderVehicleData() {
+      const dataContainer = document.getElementById("data");
+      dataContainer.innerHTML = "";
+      
+      const icons = {
+        "RPM": "fas fa-tachometer-alt",
+        "Velocidad": "fas fa-speedometer",
+        "Temperatura Motor": "fas fa-temperature-high",
+        "Carga Motor": "fas fa-cogs",
+        "Presión Combustible": "fas fa-gas-pump",
+        "Nivel Combustible": "fas fa-oil-can",
+        "Voltaje Batería": "fas fa-car-battery",
+        "Temperatura Aire": "fas fa-wind",
+        "Presión Aceite": "fas fa-oil-can",
+        "Emisiones CO2": "fas fa-smog",
+        "Eficiencia Combustible": "fas fa-gas-pump",
+        "Códigos Error": "fas fa-exclamation-triangle"
+      };
+      
+      const units = {
+        "RPM": "RPM",
+        "Velocidad": "km/h",
+        "Temperatura Motor": "°C",
+        "Carga Motor": "%",
+        "Presión Combustible": "kPa",
+        "Nivel Combustible": "%",
+        "Voltaje Batería": "V",
+        "Temperatura Aire": "°C",
+        "Presión Aceite": "kPa",
+        "Emisiones CO2": "g/km",
+        "Eficiencia Combustible": "km/L",
+        "Códigos Error": "códigos"
+      };
+      
+      for (let key in vehicleData) {
+        const value = vehicleData[key];
+        const icon = icons[key] || "fas fa-info-circle";
+        const unit = units[key] || "";
+        
+        const card = document.createElement("div");
+        card.className = "data-card fade-in";
+        card.style.animationDelay = `${Math.random() * 0.3}s`;
+        
+        const showProgress = typeof value === 'number' && value >= 0 && value <= 100;
+        
+        card.innerHTML = `
+          <h3><i class="${icon}"></i> ${key}</h3>
+          <div class="value">${value}</div>
+          <div class="unit">${unit}</div>
+          ${showProgress ? `
+            <div class="progress-bar">
+              <div class="progress" style="width: ${value}%"></div>
+            </div>
+          ` : ''}
+        `;
+        
+        dataContainer.appendChild(card);
+      }
+    }
+
+    function closeTablet() {
+      document.getElementById("tablet").style.display = "none";
+      fetch(`https://muhaddil_obd/closeUI`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    function closeUI() {
+      closeTablet();
+    }
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        currentTab = this.getAttribute('data-tab');
+      });
+    });
+
+    window.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' && document.getElementById("tablet").style.display === "block") {
+        closeTablet();
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      vehicleData = sampleVehicleData;
+      
+      setTimeout(() => {
+        const event = new CustomEvent('message', {
+          detail: {
+            data: {
+              action: "showUI",
+              vehicle: sampleVehicleData
+            }
+          }
+        });
+        window.dispatchEvent(event);
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
