@@ -17,9 +17,9 @@ server_script {
 }
 
 ui_page 'html/index.html' -- Comment this line if you want to use the minimalistic UI
--- ui_page 'html/minimalistic.html' -- Uncomment if you want to use the minimalistic UI
+-- ui_page 'html/minimalistic.html' -- Uncomment if you want to use the minimalistic UI -- Not updated yet
 
 files {
     'html/index.html', -- Comment this line if you want to use the minimalistic UI
-    -- 'html/minimalistic.html', -- Uncomment if you want to use the minimalistic UI
+    -- 'html/minimalistic.html', -- Uncomment if you want to use the minimalistic UI -- Not updated yet
 }
