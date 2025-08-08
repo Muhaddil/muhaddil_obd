@@ -153,7 +153,6 @@ function toggleOBDTablet()
             lastVehicle = vehicle
             lastPlate = plate
             lastIsElectric = isElectric
-            uiOpen = true
             TriggerServerEvent("muhaddil_obd:getVehicleData", plate, vehicle, isElectric)
 
             Citizen.CreateThread(function()
@@ -194,6 +193,7 @@ AddEventHandler("muhaddil_obd:openUI", function(vehicleData, vehicle)
             vehicle = vehicleData,
             showParticles = Config.EnableBackgrondParticles,
         })
+        uiOpen = true
         if Config.UseAnimations then
             StartTabletAnimation()
         end
