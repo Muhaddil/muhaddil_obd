@@ -10,6 +10,7 @@ Config.FrameWork = "auto" -- Set the framework to use, options are "auto", "esx"
 Config.AutoVersionChecker = true -- Automatically check for updates
 
 Config.OBDItem = 'obd' -- Item used to open the OBD tablet
+Config.InCarUseOnly = true -- Use the OBD tablet only when inside a vehicle
 Config.UpdateInterval = 60 -- Interval in seconds to update vehicle data
 Config.UseAnimations = true -- Use animations when opening the tablet
 Config.tabletAnimDict = "amb@world_human_tourist_map@male@base" -- Animation dictionary for the tablet

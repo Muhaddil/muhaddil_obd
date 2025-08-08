@@ -129,7 +129,19 @@ function toggleOBDTablet()
         local playerPed = PlayerPedId()
         local coords = GetEntityCoords(playerPed)
 
-        local vehicle = lib.getClosestVehicle(coords, Config.ScanDistance, true)
+        local vehicle = nil
+
+        if Config.InCarUseOnly and not IsPedInAnyVehicle(playerPed, false) then
+            SendNotification("OBD", "Debes estar dentro de un vehículo para usar la OBD.", 5000, "error")
+            return
+        end
+
+        if Config.InCarUseOnly then
+            vehicle = GetVehiclePedIsIn(playerPed, false)
+        else
+            vehicle = lib.getClosestVehicle(coords, Config.ScanDistance, true)
+        end
+
         if vehicle then
             local plate = GetVehicleNumberPlateText(vehicle)
             plate = plate:gsub("^%s*(.-)%s*$", "%1")
@@ -137,10 +149,6 @@ function toggleOBDTablet()
             local isElectric = IsElectricVehicle(vehicle)
 
             DebugPrint("Vehicle found. Plate:", plate, "Electric:", isElectric)
-
-            if Config.UseAnimations then
-                StartTabletAnimation()
-            end
 
             lastVehicle = vehicle
             lastPlate = plate
@@ -186,6 +194,9 @@ AddEventHandler("muhaddil_obd:openUI", function(vehicleData, vehicle)
             vehicle = vehicleData,
             showParticles = Config.EnableBackgrondParticles,
         })
+        if Config.UseAnimations then
+            StartTabletAnimation()
+        end
         DebugPrint("UI displayed with vehicle diagnostics")
     else
         SendNUIMessage({

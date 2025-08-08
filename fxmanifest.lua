@@ -3,7 +3,7 @@ game 'gta5'
 
 description 'OBD System for JG-Mechanic'
 author 'Muhaddil'
-version 'v1.0.2'
+version 'v1.0.21'
 
 shared_scripts {
     '@ox_lib/init.lua',
