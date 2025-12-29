@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
@@ -32,7 +32,8 @@
       height: 600px;
       background: #111;
       border-radius: 30px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7),
+        inset 0 0 10px rgba(255, 255, 255, 0.1);
       padding: 20px;
       overflow: hidden;
       animation: tabletDramaticEntry 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -96,30 +97,40 @@
     }
 
     .intro-content::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background:
-        radial-gradient(circle at 20% 30%, rgba(46, 204, 113, 0.2), transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(52, 152, 219, 0.2), transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(155, 89, 182, 0.1), transparent 50%);
+      background: radial-gradient(circle at 20% 30%,
+          rgba(46, 204, 113, 0.2),
+          transparent 50%),
+        radial-gradient(circle at 80% 70%,
+          rgba(52, 152, 219, 0.2),
+          transparent 50%),
+        radial-gradient(circle at 50% 50%,
+          rgba(155, 89, 182, 0.1),
+          transparent 50%);
       pointer-events: none;
     }
 
     .intro-content.show-particles::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background:
-        radial-gradient(circle at 20% 30%, rgba(46, 204, 113, 0.2), transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(52, 152, 219, 0.2), transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(155, 89, 182, 0.1), transparent 50%);
+      background: radial-gradient(circle at 20% 30%,
+          rgba(46, 204, 113, 0.2),
+          transparent 50%),
+        radial-gradient(circle at 80% 70%,
+          rgba(52, 152, 219, 0.2),
+          transparent 50%),
+        radial-gradient(circle at 50% 50%,
+          rgba(155, 89, 182, 0.1),
+          transparent 50%);
       animation: introParticles 8s linear infinite;
       pointer-events: none;
     }
@@ -159,7 +170,8 @@
       }
 
       100% {
-        text-shadow: 0 0 30px rgba(52, 152, 219, 0.8), 0 0 40px rgba(155, 89, 182, 0.4);
+        text-shadow: 0 0 30px rgba(52, 152, 219, 0.8),
+          0 0 40px rgba(155, 89, 182, 0.4);
         transform: scale(1.02);
       }
     }
@@ -316,13 +328,16 @@
     }
 
     .btn-intro::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent);
       transition: left 0.6s;
     }
 
@@ -400,18 +415,27 @@
     }
 
     .screen::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background-image:
-        radial-gradient(2px 2px at 20px 30px, rgba(46, 204, 113, 0.4), transparent),
-        radial-gradient(2px 2px at 40px 70px, rgba(52, 152, 219, 0.4), transparent),
-        radial-gradient(1px 1px at 90px 40px, rgba(46, 204, 113, 0.4), transparent),
-        radial-gradient(1px 1px at 130px 80px, rgba(52, 152, 219, 0.4), transparent),
-        radial-gradient(2px 2px at 160px 30px, rgba(155, 89, 182, 0.4), transparent);
+      background-image: radial-gradient(2px 2px at 20px 30px,
+          rgba(46, 204, 113, 0.4),
+          transparent),
+        radial-gradient(2px 2px at 40px 70px,
+          rgba(52, 152, 219, 0.4),
+          transparent),
+        radial-gradient(1px 1px at 90px 40px,
+          rgba(46, 204, 113, 0.4),
+          transparent),
+        radial-gradient(1px 1px at 130px 80px,
+          rgba(52, 152, 219, 0.4),
+          transparent),
+        radial-gradient(2px 2px at 160px 30px,
+          rgba(155, 89, 182, 0.4),
+          transparent);
       background-repeat: repeat;
       background-size: 200px 150px;
       pointer-events: none;
@@ -551,7 +575,7 @@
     }
 
     .spinner::before {
-      content: '';
+      content: "";
       position: absolute;
       top: -10px;
       left: -10px;
@@ -564,7 +588,7 @@
     }
 
     .spinner::after {
-      content: '';
+      content: "";
       position: absolute;
       top: 10px;
       left: 10px;
@@ -630,13 +654,16 @@
     }
 
     .btn::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent);
       transition: left 0.6s;
     }
 
@@ -704,7 +731,7 @@
     }
 
     .btn-close::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
@@ -717,13 +744,15 @@
     }
 
     .btn-close::after {
-      content: '';
+      content: "";
       position: absolute;
       top: 50%;
       left: 50%;
       width: 0;
       height: 0;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
+      background: radial-gradient(circle,
+          rgba(255, 255, 255, 0.6) 0%,
+          transparent 70%);
       transform: translate(-50%, -50%);
       transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       border-radius: 50%;
@@ -895,7 +924,7 @@
     }
 
     .tab::before {
-      content: '';
+      content: "";
       position: absolute;
       bottom: 0;
       left: 0;
@@ -1018,13 +1047,17 @@
     }
 
     .data-card::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(46, 204, 113, 0.3), rgba(52, 152, 219, 0.3), transparent);
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(46, 204, 113, 0.3),
+          rgba(52, 152, 219, 0.3),
+          transparent);
       transition: left 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
@@ -1063,7 +1096,6 @@
       transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
-    /* NUEVA ANIMACIÓN PARA ACTUALIZACIÓN DE VALORES */
     .data-card .value.updating {
       animation: valueUpdatePulse 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
@@ -1130,7 +1162,6 @@
       transition: width 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
-    /* NUEVA ANIMACIÓN PARA ACTUALIZACIÓN DE PROGRESO */
     .progress.updating {
       animation: progressUpdateGlow 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
@@ -1158,18 +1189,21 @@
     }
 
     .progress::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(255, 255, 255, 0.6),
+          transparent);
       animation: progressMagicShine 2.5s infinite;
     }
 
     .progress::after {
-      content: '';
+      content: "";
       position: absolute;
       top: -2px;
       left: -2px;
@@ -1224,8 +1258,7 @@
       z-index: 1000;
       opacity: 0;
       transform: translateX(150%) scale(0.5) rotateZ(15deg);
-      transition:
-        opacity 0.6s ease-out,
+      transition: opacity 0.6s ease-out,
         transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       will-change: opacity, transform;
       pointer-events: none;
@@ -1262,44 +1295,39 @@
   <div class="intro-modal" id="introModal">
     <div class="intro-content">
       <div class="intro-header">
-        <h1><i class="fas fa-car"></i> Tablet OBD-II</h1>
-        <div class="subtitle">Sistema de Diagnóstico Avanzado</div>
+        <h1 id="intro-title"><i class="fas fa-car"></i> <span id="intro-title-text"></span></h1>
+        <div class="subtitle" id="intro-subtitle"></div>
       </div>
       <div class="intro-features">
         <div class="feature-item">
           <i class="fas fa-tachometer-alt"></i>
           <div class="feature-text">
-            <strong>Monitoreo en Tiempo Real:</strong> Visualiza datos del motor, rendimiento y diagnósticos de tu
-            vehículo al instante.
+            <strong id="intro-monitor-title"></strong> <span id="intro-monitor-desc"></span>
           </div>
         </div>
         <div class="feature-item">
           <i class="fas fa-chart-line"></i>
           <div class="feature-text">
-            <strong>Análisis Detallado:</strong> Obtén información precisa sobre el estado de componentes críticos como
-            aceite, bujías y sistema de frenos.
+            <strong id="intro-analysis-title"></strong> <span id="intro-analysis-desc"></span>
           </div>
         </div>
         <div class="feature-item">
           <i class="fas fa-wrench"></i>
           <div class="feature-text">
-            <strong>Diagnóstico Profesional:</strong> Identifica problemas potenciales antes de que se conviertan en
-            reparaciones costosas.
+            <strong id="intro-diag-title"></strong> <span id="intro-diag-desc"></span>
           </div>
         </div>
         <div class="feature-item">
           <i class="fas fa-mobile-alt"></i>
           <div class="feature-text">
-            <strong>Interfaz Intuitiva:</strong> Navega fácilmente entre las pestañas de Motor, Rendimiento y
-            Diagnóstico para acceder a toda la información.
+            <strong id="intro-interface-title"></strong> <span id="intro-interface-desc"></span>
           </div>
         </div>
       </div>
       <div class="intro-footer">
-        <p>¡Bienvenido al futuro del diagnóstico automotriz! Esta tablet te permitirá mantener tu vehículo en óptimas
-          condiciones.</p>
+        <p id="intro-footer-text"></p>
         <button class="btn-intro" onclick="closeIntro()">
-          <i class="fas fa-rocket"></i> ¡Comenzar Ahora!
+          <i class="fas fa-rocket"></i> <span id="intro-btn-start"></span>
         </button>
       </div>
     </div>
@@ -1309,33 +1337,33 @@
     <div class="screen">
       <div class="status-bar">
         <div class="time">--:--</div>
-        <div class="status-icons"><i class="fas fa-wifi"></i><i class="fas fa-battery-three-quarters"></i></div>
+        <div class="status-icons">
+          <i class="fas fa-wifi"></i><i class="fas fa-battery-three-quarters"></i>
+        </div>
       </div>
 
       <div class="content">
         <div id="connection">
-          <h2><i class="fas fa-car"></i> CONEXIÓN OBD-II</h2>
-          <p class="connection-info">
-            Conecta tu tablet al sistema OBD-II de tu vehículo para acceder a datos en tiempo real.
-          </p>
+          <h2><i class="fas fa-car"></i> <span id="connection-title"></span></h2>
+          <p class="connection-info" id="connection-info"></p>
           <div class="spinner" id="spinner"></div>
           <button class="btn" id="connectBtn" onclick="connectOBD()">
-            <i class="fas fa-plug"></i> CONECTAR
+            <i class="fas fa-plug"></i> <span id="btn-connect"></span>
           </button>
         </div>
 
-        <div id="vehicleData" style="display: none; flex-direction: column;">
+        <div id="vehicleData" style="display: none; flex-direction: column">
           <div class="data-header">
-            <h2><i class="fas fa-car"></i> DATOS DEL VEHÍCULO</h2>
+            <h2><i class="fas fa-car"></i> <span id="vehicle-data-title"></span></h2>
             <button class="btn btn-close" onclick="closeUI()">
-              <i class="fas fa-times"></i> CERRAR
+              <i class="fas fa-times"></i> <span id="btn-close"></span>
             </button>
           </div>
 
           <div class="tabs">
-            <div class="tab active" data-tab="engine">Motor</div>
-            <div class="tab" data-tab="performance">Rendimiento</div>
-            <div class="tab" data-tab="diagnostics">Diagnóstico</div>
+            <div class="tab active" data-tab="engine" id="tab-engine"></div>
+            <div class="tab" data-tab="performance" id="tab-performance"></div>
+            <div class="tab" data-tab="diagnostics" id="tab-diagnostics"></div>
           </div>
 
           <div id="engine-content" class="tab-content active">
@@ -1358,29 +1386,59 @@
     let vehicleData = null;
     let currentTab = "engine";
     let isInitialized = false;
+    let currentLocales = {};
+
+    function applyLocales(locales) {
+      if (!locales) return;
+      currentLocales = locales;
+
+      document.getElementById('intro-title-text').textContent = locales.ui_title || 'OBD Tablet';
+      document.getElementById('intro-subtitle').textContent = locales.ui_subtitle || '';
+      document.getElementById('intro-monitor-title').textContent = (locales.ui_intro_monitor || '') + ':';
+      document.getElementById('intro-monitor-desc').textContent = locales.ui_intro_monitor_desc || '';
+      document.getElementById('intro-analysis-title').textContent = (locales.ui_intro_analysis || '') + ':';
+      document.getElementById('intro-analysis-desc').textContent = locales.ui_intro_analysis_desc || '';
+      document.getElementById('intro-diag-title').textContent = (locales.ui_intro_diag || '') + ':';
+      document.getElementById('intro-diag-desc').textContent = locales.ui_intro_diag_desc || '';
+      document.getElementById('intro-interface-title').textContent = (locales.ui_intro_interface || '') + ':';
+      document.getElementById('intro-interface-desc').textContent = locales.ui_intro_interface_desc || '';
+      document.getElementById('intro-footer-text').textContent = locales.ui_intro_footer || '';
+      document.getElementById('intro-btn-start').textContent = locales.ui_intro_start || 'Start';
+
+      document.getElementById('connection-title').textContent = locales.ui_connection_title || '';
+      document.getElementById('connection-info').textContent = locales.ui_connection_info || '';
+      document.getElementById('btn-connect').textContent = locales.ui_btn_connect || 'Connect';
+      document.getElementById('vehicle-data-title').textContent = locales.ui_vehicle_data || '';
+      document.getElementById('btn-close').textContent = locales.ui_btn_close || 'Close';
+
+      document.getElementById('tab-engine').textContent = locales.ui_tab_engine || 'Engine';
+      document.getElementById('tab-performance').textContent = locales.ui_tab_performance || 'Performance';
+      document.getElementById('tab-diagnostics').textContent = locales.ui_tab_diagnostics || 'Diagnostics';
+    }
 
     function checkFirstTime() {
       try {
-        if (typeof GetParentResourceName === 'function') {
-          const hasSeenIntro = localStorage.getItem('obd_tablet_intro_seen');
+        if (typeof GetParentResourceName === "function") {
+          const hasSeenIntro = localStorage.getItem("obd_tablet_intro_seen");
           if (!hasSeenIntro) {
             showIntroduction();
-            localStorage.setItem('obd_tablet_intro_seen', 'true');
+            localStorage.setItem("obd_tablet_intro_seen", "true");
           }
         } else {
-          const hasSeenIntro = localStorage.getItem('obd_tablet_intro_seen');
+          const hasSeenIntro = localStorage.getItem("obd_tablet_intro_seen");
           if (!hasSeenIntro) {
             showIntroduction();
-            localStorage.setItem('obd_tablet_intro_seen', 'true');
+            localStorage.setItem("obd_tablet_intro_seen", "true");
           }
         }
       } catch (error) {
-        console.log('Error accessing localStorage:', error);
+        console.log("Error accessing localStorage:", error);
         showIntroduction();
       }
     }
 
     function showIntroduction() {
+      applyLocales(currentLocales);
       document.getElementById('introModal').style.display = 'flex';
     }
 
@@ -1414,59 +1472,69 @@
 
     const sampleVehicleData = {
       motor: {
-        "Aceite del motor": 85,
-        "Bujías": 92,
-        "Motor": 78,
-        "Refrigerante": 65,
-        "Filtro de aire": 88
+        engine_oil: 85,
+        spark_plugs: 92,
+        ev_motor: 78,
+        ev_coolant: 65,
+        air_filter: 88
       },
       rendimiento: {
-        "Suspensión": 75,
-        "Embrague": 90,
-        "Neumáticos": 82,
-        "Pastillas de freno": 70
+        suspension: 75,
+        clutch: 90,
+        tyres: 82,
+        brake_pads: 70
       },
       diagnostico: {
-        "Batería": 60,
-        "Sistema eléctrico": 95,
-        "Escape": 80,
-        "Encendido": 87
+        ev_battery: 60
       }
+    };
+
+    function t(key) {
+      return currentLocales[key] || key;
+    }
+
+    const ICONS = {
+      engine_temp: "fas fa-temperature-high",
+      rpm: "fas fa-tachometer-alt",
+      fuel_level: "fas fa-gas-pump",
+      body_health: "fas fa-car",
+
+      engine_oil: "fas fa-oil-can",
+      spark_plugs: "fas fa-bolt",
+      ev_motor: "fas fa-cogs",
+      ev_coolant: "fas fa-water",
+      ev_battery: "fas fa-car-battery",
+      air_filter: "fas fa-wind",
+
+      suspension: "fas fa-car-side",
+      clutch: "fas fa-sliders-h",
+      tyres: "fa-solid fa-truck-monster",
+      brake_pads: "fas fa-exclamation-triangle"
     };
 
     function renderTab(tabName, data) {
       const container = document.querySelector(`#${tabName}-content .data-grid`);
       container.innerHTML = '';
 
-      const icons = {
-        "Aceite del motor": "fas fa-oil-can",
-        "Bujías": "fas fa-bolt",
-        "Motor": "fas fa-cogs",
-        "Refrigerante": "fas fa-water",
-        "Filtro de aire": "fas fa-wind",
-        "Suspensión": "fas fa-car-side",
-        "Embrague": "fas fa-sliders-h",
-        "Neumáticos": "fa-solid fa-truck-monster",
-        "Pastillas de freno": "fas fa-car-crash",
-        "Batería": "fas fa-car-battery",
-        "Sistema eléctrico": "fas fa-bolt",
-        "Escape": "fas fa-fire",
-        "Encendido": "fas fa-power-off"
-      };
-
-      for (const [name, val] of Object.entries(data)) {
+      for (const [key, val] of Object.entries(data)) {
         const card = document.createElement('div');
         card.className = 'data-card';
-        card.setAttribute('data-name', name);
-        const icon = icons[name] || 'fas fa-info-circle';
+        card.dataset.key = key;
+
+        const icon = ICONS[key] || 'fas fa-info-circle';
+        if (!ICONS[key]) {
+          console.warn(`Missing icon for key: ${key}`);
+        }
+        const label = t(key);
 
         card.innerHTML = `
-          <h3><i class="${icon}"></i> ${name}</h3>
-          <div class="value">${val}</div>
-          <div class="progress-bar">
-            <div class="progress" style="width:${parseFloat(val)}%"></div>
-          </div>
-        `;
+      <h3><i class="${icon}"></i> ${label}</h3>
+      <div class="value">${val}</div>
+      <div class="progress-bar">
+        <div class="progress" style="width:${val}%"></div>
+      </div>
+    `;
+
         container.appendChild(card);
       }
     }
@@ -1502,7 +1570,7 @@
     }
 
     function connectOBD() {
-      showNotification("Conectando al vehículo...");
+      showNotification(t('ui_connecting'));
       document.getElementById('connectBtn').style.display = 'none';
       document.getElementById('spinner').style.display = 'block';
 
@@ -1519,7 +1587,7 @@
 
           document.getElementById('connection').style.display = 'none';
           document.getElementById('vehicleData').style.display = 'flex';
-          showNotification("¡Conexión exitosa!");
+          showNotification(t('ui_connected'));
         }
         document.getElementById('spinner').style.display = 'none';
         document.getElementById('connectBtn').style.display = 'inline-block';
@@ -1560,6 +1628,8 @@
       if (data.action === 'showUI') {
         vehicleData = data.vehicle || sampleVehicleData;
         const showParticles = data.showParticles || false;
+
+        if (data.locales) applyLocales(data.locales);
 
         if (showParticles) {
           intro.classList.add('show-particles');

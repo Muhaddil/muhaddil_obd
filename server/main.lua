@@ -5,6 +5,10 @@ if Config.FrameWork == "auto" then
     elseif GetResourceState('qb-core') == 'started' then
         QBCore = exports['qb-core']:GetCoreObject()
         Framework = "qb"
+    elseif GetResourceState('qbx_core') == 'started' then
+        Framework = "qbox"
+    else
+        print('===NO SUPPORTED FRAMEWORK FOUND===')
     end
 elseif Config.FrameWork == "esx" and GetResourceState('es_extended') == 'started' then
     ESX = exports['es_extended']:getSharedObject()
@@ -12,6 +16,8 @@ elseif Config.FrameWork == "esx" and GetResourceState('es_extended') == 'started
 elseif Config.FrameWork == "qb" and GetResourceState('qb-core') == 'started' then
     QBCore = exports['qb-core']:GetCoreObject()
     Framework = "qb"
+elseif Config.FrameWork == "qbox" and GetResourceState('qbx_core') == 'started' then
+    Framework = "qbox"
 else
     print('===NO SUPPORTED FRAMEWORK FOUND===')
 end
@@ -41,23 +47,24 @@ end
 local function TranslateDates(servicing, isElectric)
     local result = {
         motor = {},
-        rendimiento = {
-            ["Suspensión"] = string.format("%.2f%%", servicing.suspension or 0),
-            ["Neumáticos"] = string.format("%.2f%%", servicing.tyres or 0),
-            ["Pastillas de freno"] = string.format("%.2f%%", servicing.brakePads or 0),
-        },
+        rendimiento = {},
         diagnostico = {}
     }
 
+    -- Chasis / performance
+    result.rendimiento.suspension = string.format("%.2f%%", servicing.suspension or 0)
+    result.rendimiento.tyres = string.format("%.2f%%", servicing.tyres or 0)
+    result.rendimiento.brake_pads = string.format("%.2f%%", servicing.brakePads or 0)
+
     if isElectric then
-        result.motor["Motor"] = string.format("%.2f%%", servicing.evMotor or 0)
-        result.motor["Refrigerante"] = string.format("%.2f%%", servicing.evCoolant or 0)
-        result.diagnostico["Batería"] = string.format("%.2f%%", servicing.evBattery or 0)
+        result.motor.ev_motor = string.format("%.2f%%", servicing.evMotor or 0)
+        result.motor.ev_coolant = string.format("%.2f%%", servicing.evCoolant or 0)
+        result.diagnostico.ev_battery = string.format("%.2f%%", servicing.evBattery or 0)
     else
-        result.motor["Aceite del motor"] = string.format("%.2f%%", servicing.engineOil or 0)
-        result.motor["Bujías"] = string.format("%.2f%%", servicing.sparkPlugs or 0)
-        result.rendimiento["Filtro de aire"] = string.format("%.2f%%", servicing.airFilter or 0)
-        result.rendimiento["Embrague"] = string.format("%.2f%%", servicing.clutch or 0)
+        result.motor.engine_oil = string.format("%.2f%%", servicing.engineOil or 0)
+        result.motor.spark_plugs = string.format("%.2f%%", servicing.sparkPlugs or 0)
+        result.rendimiento.air_filter = string.format("%.2f%%", servicing.airFilter or 0)
+        result.rendimiento.clutch = string.format("%.2f%%", servicing.clutch or 0)
     end
 
     return result
@@ -78,7 +85,8 @@ AddEventHandler("muhaddil_obd:getVehicleData", function(plate, vehicle, isElectr
             DebugPrint("Translated servicing data:", json.encode(trServicing))
             TriggerClientEvent("muhaddil_obd:openUI", src, trServicing, vehicle)
         else
-            TriggerClientEvent("muhaddil_obd:SendNotification", src, "OBD", "No se encontraron datos del vehículo.", 5000, "error")
+            TriggerClientEvent("muhaddil_obd:SendNotification", src, _L('obd_title'), _L('no_vehicle_data'), 5000,
+                "error")
         end
     end)
 end)
@@ -94,6 +102,8 @@ function CreateUseableItem(name, cb)
         ESX.RegisterUsableItem(name, cb)
     elseif Framework == "qb" then
         QBCore.Functions.CreateUseableItem(name, cb)
+    elseif Framework == "qbox" then
+        exports.qbx_core:CreateUseableItem(name, cb)
     else
         print("Unsupported framework for CreateUseableItem")
     end

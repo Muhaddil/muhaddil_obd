@@ -5,6 +5,10 @@ if Config.FrameWork == "auto" then
     elseif GetResourceState('qb-core') == 'started' then
         QBCore = exports['qb-core']:GetCoreObject()
         Framework = "qb"
+    elseif GetResourceState('qbx_core') == 'started' then
+        Framework = "qbox"
+    else
+        print('===NO SUPPORTED FRAMEWORK FOUND===')
     end
 elseif Config.FrameWork == "esx" and GetResourceState('es_extended') == 'started' then
     ESX = exports['es_extended']:getSharedObject()
@@ -12,6 +16,8 @@ elseif Config.FrameWork == "esx" and GetResourceState('es_extended') == 'started
 elseif Config.FrameWork == "qb" and GetResourceState('qb-core') == 'started' then
     QBCore = exports['qb-core']:GetCoreObject()
     Framework = "qb"
+elseif Config.FrameWork == "qbox" and GetResourceState('qbx_core') == 'started' then
+    Framework = "qbox"
 else
     print('===NO SUPPORTED FRAMEWORK FOUND===')
 end
@@ -59,6 +65,8 @@ function SendNotification(msgtitle, msg, time, type)
             QBCore.Functions.Notify(msg, type, time)
         elseif Framework == 'esx' then
             TriggerEvent('esx:showNotification', msg, type, time)
+        elseif Framework == 'qbox' then
+            exports.qbx_core:Notify(msg, type, time)
         end
     end
 end
@@ -129,19 +137,10 @@ function toggleOBDTablet()
         local playerPed = PlayerPedId()
         local coords = GetEntityCoords(playerPed)
 
-        local vehicle = nil
+        DebugPrint("Getting closest vehicle from player coordinates:", coords)
 
-        if Config.InCarUseOnly and not IsPedInAnyVehicle(playerPed, false) then
-            SendNotification("OBD", "Debes estar dentro de un vehículo para usar la OBD.", 5000, "error")
-            return
-        end
-
-        if Config.InCarUseOnly then
-            vehicle = GetVehiclePedIsIn(playerPed, false)
-        else
-            vehicle = lib.getClosestVehicle(coords, Config.ScanDistance, true)
-        end
-
+        -- local vehicle, distance = ESX.Game.GetClosestVehicle(coords)
+        local vehicle = lib.getClosestVehicle(coords, Config.ScanDistance, true)
         if vehicle then
             local plate = GetVehicleNumberPlateText(vehicle)
             plate = plate:gsub("^%s*(.-)%s*$", "%1")
@@ -149,6 +148,19 @@ function toggleOBDTablet()
             local isElectric = IsElectricVehicle(vehicle)
 
             DebugPrint("Vehicle found. Plate:", plate, "Electric:", isElectric)
+
+            local vehicle = nil
+
+            if Config.InCarUseOnly and not IsPedInAnyVehicle(playerPed, false) then
+                SendNotification(_L('obd_title'), _L('must_be_in_vehicle'), 5000, "error")
+                return
+            end
+
+            if Config.InCarUseOnly then
+                vehicle = GetVehiclePedIsIn(playerPed, false)
+            else
+                vehicle = lib.getClosestVehicle(coords, Config.ScanDistance, true)
+            end
 
             lastVehicle = vehicle
             lastPlate = plate
@@ -165,7 +177,7 @@ function toggleOBDTablet()
             end)
         else
             DebugPrint("No vehicle found nearby")
-            SendNotification("OBD", "No hay vehículos cerca.", 5000, "error")
+            SendNotification(_L('obd_title'), _L('no_vehicle_nearby'), 5000, "error")
         end
     end
 end
@@ -181,10 +193,18 @@ AddEventHandler("muhaddil_obd:openUI", function(vehicleData, vehicle)
     local fuelLevel = GetVehicleFuelLevel(vehicle)
     local bodyHealth = GetVehicleBodyHealth(vehicle)
 
-    vehicleData.diagnostico["Temperatura del refrigerante"] = string.format("%.2f", engineTemp)
-    vehicleData.diagnostico.RPM = string.format("%.2f", currentRpm)
-    vehicleData.diagnostico["Nivel de combustible"] = string.format("%.2f%%", fuelLevel)
-    vehicleData.diagnostico["Estado de la carrocería"] = string.format("%.2f%%", bodyHealth / 10)
+    DebugPrint("Vehicle data - Engine Temp:", engineTemp)
+    DebugPrint("Vehicle data - RPM:", currentRpm)
+    DebugPrint("Vehicle data - Fuel Level:", fuelLevel)
+    DebugPrint("Vehicle data - Body Health:", bodyHealth)
+
+    vehicleData.diagnostico.engine_temp = string.format("%.2f", engineTemp)
+    vehicleData.diagnostico.rpm = string.format("%.2f", currentRpm)
+    vehicleData.diagnostico.fuel_level = string.format("%.2f%%", fuelLevel)
+    vehicleData.diagnostico.body_health = string.format("%.2f%%", bodyHealth / 10)
+
+    local currentLocale = Config.Locale or 'en'
+    local locales = Locales[currentLocale] or Locales['en']
 
     if not IsNuiFocused() then
         SetNuiFocus(true, true)
@@ -192,12 +212,13 @@ AddEventHandler("muhaddil_obd:openUI", function(vehicleData, vehicle)
             action = "showUI",
             vehicle = vehicleData,
             showParticles = Config.EnableBackgrondParticles,
+            locales = locales
         })
+        DebugPrint("UI displayed with vehicle diagnostics")
         uiOpen = true
         if Config.UseAnimations then
             StartTabletAnimation()
         end
-        DebugPrint("UI displayed with vehicle diagnostics")
     else
         SendNUIMessage({
             action = "updateData",

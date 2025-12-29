@@ -1,13 +1,15 @@
 fx_version 'cerulean'
 game 'gta5'
+lua54 'yes'
 
 description 'OBD System for JG-Mechanic'
 author 'Muhaddil'
-version 'v1.0.22'
+version 'v1.0.3'
 
 shared_scripts {
     '@ox_lib/init.lua',
-    'config.lua',
+    'shared/*',
+    'locales/*',
 }
 
 client_script 'client/*'
@@ -16,10 +18,9 @@ server_script {
     'server/*'
 }
 
-ui_page 'html/index.html' -- Comment this line if you want to use the minimalistic UI
--- ui_page 'html/minimalistic.html' -- Uncomment if you want to use the minimalistic UI -- Not updated yet
+ui_page 'html/index.html'
 
 files {
-    'html/index.html', -- Comment this line if you want to use the minimalistic UI
-    -- 'html/minimalistic.html', -- Uncomment if you want to use the minimalistic UI -- Not updated yet
+    'html/index.html',
+    'locales/*'
 }
